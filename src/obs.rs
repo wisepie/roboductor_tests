@@ -1,11 +1,12 @@
 use anyhow::{Result, anyhow};
-use obws::Client;
+use obws::{Client, responses::scenes::Scenes};
 use std::{
     process::{Command, Stdio},
     time::Duration,
 };
 use tokio::time::sleep;
 
+//TODO: Add videoplayer and waiting scene fields and a type default ("no subs, subs, dub")
 pub struct ObsClient {
     obs: Client,
     port: u16,
@@ -76,5 +77,11 @@ impl ObsClient {
             Err(e) => Err(anyhow!("{e}")),
         }
     }
-}
 
+    pub async fn get_scenes(&self) -> Result<Scenes> {
+        match self.obs.scenes().list().await {
+            Ok(scenes) => Ok(scenes),
+            Err(e) => Err(anyhow!("{e}")),
+        }
+    }
+}

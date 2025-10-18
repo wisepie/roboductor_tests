@@ -1,3 +1,5 @@
+use std::f64;
+
 use anyhow::{Result, anyhow};
 use futures_util::StreamExt;
 use reqwest::StatusCode;
@@ -11,6 +13,8 @@ const URL: [&str; 4] = [
     "wss://chat.strims.gg/ws",
     "wss://chat2.strims.gg/ws",
 ];
+const MAX_OPTIONS: i32 = 50;
+const MIN_OPTIONS: i32 = 10;
 
 pub struct DGG {
     write: futures_util::stream::SplitSink<
@@ -54,6 +58,7 @@ impl DGG {
             }
         }
     }
+    //TODO: Add movie request handling. Return Vec<Movie>
     pub async fn handle_messages(&mut self) {
         while let Some(msg) = self.read.next().await {
             let msg = msg.expect("Error reading message");
@@ -77,4 +82,13 @@ impl DGG {
             }
         }
     }
+}
+pub fn exp_sat(n: i32) -> i32 {
+    if n < MIN_OPTIONS {
+        return n;
+    }
+    let n = n as f64;
+    let max = MAX_OPTIONS as f64;
+    let min = MIN_OPTIONS as f64;
+    (max - (max - min) * f64::consts::E.powf(0.1 - 0.01 * n)).round() as i32
 }

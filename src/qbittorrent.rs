@@ -6,6 +6,7 @@ use qbit_rs::model::Credential;
 pub struct QbitClient {
     client: Qbit,
 }
+//TODO: Change env variables to parameters for easier testing in main.
 impl QbitClient {
     pub async fn connect() -> Result<Self> {
         dotenv().ok();
@@ -42,4 +43,18 @@ impl QbitClient {
             Err(e) => Err(anyhow!("{e}")),
         }
     }
+    //TODO: Qbit disconnects clients after an hour by default. Return Result.
+    pub async fn reconnect(&self) {}
+
+    //TODO: Either change search term to serde_json::Value or call prowlarr::search_prowlarr
+    //inside. Important to search for preexisting torrents first. Return video path when download
+    //is completed.
+    pub async fn download_torrent(&self, search_term: String) {}
+
+    //TODO: Attempt ~10 searches in 10 seconds. Return Result.
+    pub async fn get_hash(&self, title: String, movie_path: String) {}
+
+    //TODO: Search for video formats in torrent and pick the longest one. Return String video
+    //path
+    pub async fn get_main_video_path(&self, info_hash: String, movie_path: String) {}
 }

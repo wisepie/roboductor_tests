@@ -43,25 +43,29 @@ impl Movie {
         }
     }
     pub fn make_generic_list() -> CreateOption {
+        //NOTE: use same movie for each test. 307124 - love on a leash
         let mut list = Vec::new();
 
         list.push(Movie::make_generic_movie(
             "Test".to_owned(),
-            Some(34242),
-            Some(200),
+            Some(307124),
+            Some(86),
         ));
         list.push(Movie::make_generic_movie(
             "Test1".to_owned(),
-            Some(3424),
-            Some(349),
+            Some(307124),
+            Some(86),
         ));
         list.push(Movie::make_generic_movie(
             "Test3".to_owned(),
-            Some(429),
-            Some(20),
+            Some(307124),
+            Some(86),
         ));
         CreateOption::MovieObjects(list)
     }
+    //TODO: Finish this function. TMDb doesn't return optimized searches so something
+    //to filter and find the closest match is needed. Use popularity, title match, and year if
+    //possible. Should return Result<Movie>
     pub async fn search_tmdb(api_key: String, title: String, year: Option<String>) {
         let mut params = vec![("api_key", api_key), ("query", title)];
         if let Some(year) = year {
@@ -74,7 +78,7 @@ impl Movie {
             .query(&params)
             .send()
             .await
-            .expect("Error Tmdb");
+            .expect("TMDb Response Error");
 
         let status = res.status();
         let text = res.text().await.expect("Text error");
@@ -172,6 +176,8 @@ impl Dinkdonk {
                 println!("Status: {}", status);
                 println!("Text: {}", text);
 
+                //TODO: Clean this json match up a bit. maybe make structs based on dinkdonk.mov
+                //api
                 match data
                     .get("data")
                     .and_then(|data| data.get("id"))
@@ -185,4 +191,6 @@ impl Dinkdonk {
             Err(e) => Err(anyhow!("{e}")),
         }
     }
+    //TODO: Return maybe Vec<(votes, Movie)>
+    pub async fn get_results(poll_id: String) {}
 }
