@@ -66,7 +66,7 @@ impl Movie {
     //TODO: Finish this function. TMDb doesn't return optimized searches so something
     //to filter and find the closest match is needed. Use popularity, title match, and year if
     //possible. Should return Result<Movie>
-    pub async fn search_tmdb(api_key: String, title: String, year: Option<String>) {
+    pub async fn search_tmdb(api_key: String, title: String, year: Option<String>) -> Result<Self> {
         let mut params = vec![("api_key", api_key), ("query", title)];
         if let Some(year) = year {
             params.push(("year", year));
@@ -85,6 +85,8 @@ impl Movie {
 
         println!("{}", status);
         println!("{}", text);
+	// TODO: Finish implementation. Adding this so project builds.
+	Err(anyhow!("Method stub."))
     }
 }
 
